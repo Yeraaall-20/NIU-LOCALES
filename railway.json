@@ -1,0 +1,6 @@
+{
+  "nix": {
+    "nixpkgs": ["nodejs_20"],
+    "packages": []
+  }
+}

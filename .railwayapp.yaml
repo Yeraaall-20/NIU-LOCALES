@@ -1,0 +1,21 @@
+# Railway.app configuration
+# Multi-service deployment configuration
+
+services:
+  backend:
+    build:
+      context: ./backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    environmentVariables:
+      NODE_ENV: production
+      PORT: 4000
+
+  frontend:
+    build:
+      context: ./frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run preview
+    environmentVariables:
+      NODE_ENV: production
+      VITE_API_URL: ${{backend.RAILWAY_PUBLIC_DOMAIN}}/api
