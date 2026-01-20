@@ -1,6 +1,6 @@
 {
-  "nix": {
-    "nixpkgs": ["nodejs_20"],
-    "packages": []
+  "$schema": "https://raw.githubusercontent.com/railwayapp/railway/main/schema.json",
+  "build": {
+    "builder": "nixpacks"
   }
 }
