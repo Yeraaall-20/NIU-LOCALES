@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: niu-locales-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=file:./dev.db
+      - JWT_SECRET=${JWT_SECRET:-your-secret-key}
+      - CORS_ORIGIN=http://localhost
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/prisma:/app/prisma
+      - backend-node-modules:/app/node_modules
+      - backend-db:/app/prisma
+    networks:
+      - niu-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: niu-locales-frontend
+    ports:
+      - "80:80"
+    environment:
+      - VITE_API_URL=http://backend:5000
+    depends_on:
+      - backend
+    networks:
+      - niu-network
+    restart: unless-stopped
+
+volumes:
+  backend-node-modules:
+  backend-db:
+
+networks:
+  niu-network:
+    driver: bridge

@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url = env("DATABASE_URL")
+}
+
+// Los enums se convertirán a strings para SQLite
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  nombre    String
+  apellido  String
+  role      String   @default("USER")
+  activo    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relaciones
+  visitas   Visita[]
+  notas     Nota[]
+  createdLocales Local[] @relation("LocalCreatedBy")
+  updatedLocales Local[] @relation("LocalUpdatedBy")
+}
+
+model Local {
+  id            Int     @id @default(autoincrement())
+  sigla         String  @unique
+  nombreLocal   String
+  direccion     String
+  comuna        String
+  region        String
+  pais          String
+  telefonoLocal String
+  telefono01    String?
+  telefono02    String?
+  telefono03    String?
+  telefonoRespaldo String?
+  asignado      String?
+  rut           String?
+  razonSocial   String?
+  encargadoLocal String?
+  esFranquicia  String?
+  tieneUps      Boolean?
+  servicioAudio String?
+  marca         String
+  tipoLocal     String
+  gOperaciones  String?
+
+  // Telefonia por proveedor
+  claroNumero     String?
+  claroTarifa     String?
+  claroAnexo1     String?
+  claroAnexo2     String?
+  claroAnexo3     String?
+  gtdNumero       String?
+  gtdTarifa       String?
+  gtdAnexo1       String?
+  gtdAnexo2       String?
+  gtdAnexo3       String?
+  entelNumero     String?
+  entelTarifa     String?
+  entelAnexo1     String?
+  entelAnexo2     String?
+  entelAnexo3     String?
+  movistarNumero  String?
+  movistarTarifa  String?
+  movistarAnexo1  String?
+  movistarAnexo2  String?
+  movistarAnexo3  String?
+
+  // Red
+  dispositivoRed       String?
+  enlacePrincipal      String?
+  enlaceSecundario     String?
+  enlaceTercero        String?
+  switchCantidad       String?
+  switchPuertos        String?
+  apCantidad           String?
+  teltonikaMarca       String?
+  teltonikaModelo      String?
+
+  // Servidor principal
+  servidorPrincipalModelo     String?
+  servidorPrincipalDisco      String?
+  servidorPrincipalRam        String?
+  servidorPrincipalProcesador String?
+  servidorPrincipalProxmox    Boolean? @default(false)
+
+  // Servidor respaldo
+  servidorRespaldoModelo     String?
+  servidorRespaldoDisco      String?
+  servidorRespaldoRam        String?
+  servidorRespaldoProcesador String?
+  servidorRespaldoProxmox    Boolean? @default(false)
+
+  // CCTV - Configuración DVR (OBLIGATORIOS)
+  dvrModelo            String
+  dvrCapacidadDisco    String
+  dvrNumeroCamaras     String
+  dvrUsuarioAdmin      String
+  dvrUsuarioOperaciones String
+  dvrClaveAdmin        String
+  dvrClaveOperaciones  String
+
+  // Auditoría
+  createdBy   Int?
+  updatedBy   Int?
+  createdUser User? @relation("LocalCreatedBy", fields: [createdBy], references: [id])
+  updatedUser User? @relation("LocalUpdatedBy", fields: [updatedBy], references: [id])
+  lastModifiedAt DateTime?
+  lastModifiedSection String? // Qué sección se modificó
+
+  telefonosSecundarios SecondaryPhone[]
+  camaras              Camera[]
+  visitas              Visita[]
+  notas                Nota[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SecondaryPhone {
+  id      Int    @id @default(autoincrement())
+  numero  String
+  anexo   String?
+  localId Int
+  local   Local  @relation(fields: [localId], references: [id], onDelete: Cascade)
+}
+
+model Camera {
+  id           Int     @id @default(autoincrement())
+  serial       String
+  usuarioOp    String?
+  claveOp      String?
+  usuarioAdmin String?
+  claveAdmin   String?
+  localId      Int
+  local        Local   @relation(fields: [localId], references: [id], onDelete: Cascade)
+}
+
+model Visita {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  localId     Int
+  descripcion String?
+  tipoVisita  String   // "mantenimiento", "revision", "instalacion", etc.
+  fecha       DateTime @default(now())
+  duracion    Int?     // en minutos
+  observaciones String?
+  
+  user  User  @relation(fields: [userId], references: [id])
+  local Local @relation(fields: [localId], references: [id])
+  
+  createdAt DateTime @default(now())
+}
+
+model Nota {
+  id        Int      @id @default(autoincrement())
+  localId   Int
+  local     Local    @relation(fields: [localId], references: [id], onDelete: Cascade)
+  contenido String
+  tipo      String   @default("TECNICO") // "ADMIN" o "TECNICO"
+  createdBy Int
+  createdUser User? @relation(fields: [createdBy], references: [id])
+  fechaProgramada DateTime? // Fecha cuando se irá a realizar
+  completada Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ReporteActividad {
+  id          Int      @id @default(autoincrement())
+  mes         Int      // 1-12
+  anio        Int
+  fechaEnvio  DateTime @default(now())
+  contenido   String   // JSON con el resumen de actividades
+  enviado     Boolean  @default(false)
+}
