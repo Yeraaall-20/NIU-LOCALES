@@ -193,7 +193,6 @@ router.post('/', authenticateToken, async (req, res) => {
     res.status(201).json(local);
   } catch (error: any) {
     console.error('Error creando local:', error);
-    console.error('Datos recibidos:', JSON.stringify(data, null, 2));
     if (error.code === 'P2002') {
       return res.status(400).json({ error: 'La sigla ya existe' });
     }
@@ -250,7 +249,6 @@ router.put('/:id', authenticateToken, async (req, res) => {
     res.json(local);
   } catch (error: any) {
     console.error('Error actualizando local:', error);
-    console.error('Datos recibidos:', JSON.stringify(data, null, 2));
     if (error.code === 'P2002') {
       return res.status(400).json({ error: 'La sigla ya existe' });
     }
