@@ -9,7 +9,7 @@ const apiInstance = axios.create({
 apiInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) config.headers["Authorization"] = `Bearer ${token}`;
-  console.log('🌐 Request URL:', config.baseURL + config.url);
+  console.log('🌐 Request URL:', (config.baseURL || '') + (config.url || ''));
   return config;
 });
 
