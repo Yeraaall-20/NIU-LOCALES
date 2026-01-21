@@ -1,8 +1,10 @@
 import axios from "axios";
 
-// Nueva instancia con URL corregida - Puerto 4000 con /api
+// Obtener la URL de la API del entorno o usar localhost por defecto
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
+
 const apiInstance = axios.create({ 
-  baseURL: "http://localhost:4000/api",
+  baseURL: API_URL,
   timeout: 10000
 });
 
