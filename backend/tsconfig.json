@@ -3,9 +3,7 @@
     "target": "ES2020",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "allowImportingTsExtensions": true,
-    "noEmit": false,
-    "rootDir": ".",
+    "rootDir": "src",
     "outDir": "dist",
     "esModuleInterop": true,
     "strict": true,
@@ -14,6 +12,7 @@
     "baseUrl": "."
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "prisma/seed.ts"]
+  "exclude": ["node_modules", "dist"]
 }
+
 
