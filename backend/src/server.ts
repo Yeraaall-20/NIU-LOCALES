@@ -28,14 +28,8 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Serve frontend
-const frontendPath = path.join(__dirname, '../../frontend/dist');
-app.use(express.static(frontendPath));
-
-// SPA fallback - redirige todas las rutas no API a index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(frontendPath, 'index.html'));
-});
+// Note: Frontend is deployed as a separate Static Site on Render
+// No need to serve frontend from this backend
 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor ejecutándose en puerto ${PORT}`);
