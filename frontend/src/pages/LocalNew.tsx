@@ -149,8 +149,10 @@ export default function LocalNew() {
   }
 
   React.useEffect(() => {
+    // Skip computing sigla while data is loading in edit mode
+    if (isLoadingData) return;
     setSigla(computeSigla(marca, number));
-  }, [marca, number]);
+  }, [marca, number, isLoadingData]);
 
   // Auto-compute next number for selected brand based on existing locales
   // Solo en modo creación (no en edición)
