@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import NotesSection from './NotesSection';
 
 interface Local {
   id: number;
@@ -13,6 +14,9 @@ interface Local {
   razonSocial?: string;
   encargadoLocal?: string;
   esFranquicia?: string;
+  asignado?: string;
+  tieneUps?: boolean;
+  dispositivoRed?: string;
 }
 
 interface LocalRowExpandedProps {
@@ -57,8 +61,8 @@ export default function LocalRowExpanded({ local, onEdit, onDelete }: LocalRowEx
       </div>
 
       {/* Información principal en grid */}
-      <div className="grid md:grid-cols-2 gap-6 mb-6">
-        {/* Columna izquierda - Ubicación y Contacto */}
+      <div className="grid md:grid-cols-3 gap-6 mb-6">
+        {/* Columna 1 - Ubicación */}
         <div className="space-y-4">
           <div>
             <p className="text-xs font-semibold text-gray-500 uppercase">Ubicación</p>
@@ -78,7 +82,7 @@ export default function LocalRowExpanded({ local, onEdit, onDelete }: LocalRowEx
           </div>
         </div>
 
-        {/* Columna derecha - Información Comercial */}
+        {/* Columna 2 - Información Legal */}
         <div className="space-y-4">
           <div>
             <p className="text-xs font-semibold text-gray-500 uppercase">Empresa</p>
@@ -91,11 +95,42 @@ export default function LocalRowExpanded({ local, onEdit, onDelete }: LocalRowEx
             <p className="text-sm text-gray-700 font-medium">{local.encargadoLocal || 'Sin asignar'}</p>
             {local.esFranquicia && (
               <p className="text-xs text-gray-500 mt-1">
-                Tipo: {local.esFranquicia === 'FRANQUICIA' ? '🔗 Franquicia' : '🏢 Propio'}
+                {local.esFranquicia === 'FRANQUICIA' ? '🔗 Franquicia' : '🏢 Propio'}
               </p>
             )}
           </div>
         </div>
+
+        {/* Columna 3 - Asignación e Infraestructura */}
+        <div className="space-y-4">
+          <div>
+            <p className="text-xs font-semibold text-gray-500 uppercase">Asignado a</p>
+            <p className="text-sm text-gray-700 font-medium break-all">{local.asignado || 'No asignado'}</p>
+          </div>
+
+          <div>
+            <p className="text-xs font-semibold text-gray-500 uppercase">Infraestructura</p>
+            <div className="space-y-1">
+              <p className="text-sm text-gray-700">
+                <span className="font-medium">UPS:</span>{' '}
+                <span>{local.tieneUps ? '✅ Sí' : '❌ No'}</span>
+              </p>
+              {local.dispositivoRed && (
+                <p className="text-sm text-gray-700">
+                  <span className="font-medium">Dispositivo:</span> {local.dispositivoRed}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sección de Notas/Comentarios */}
+      <div className="mb-6 p-4 bg-white rounded-lg border border-gray-200">
+        <h4 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
+          📝 Notas y Comentarios
+        </h4>
+        <NotesSection localId={local.id} />
       </div>
 
       {/* Botones de acción */}

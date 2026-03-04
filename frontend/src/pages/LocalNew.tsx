@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api';
 import Header from '../components/header';
 import { toast } from 'react-toastify';
@@ -47,7 +47,10 @@ const serviciosAudio = [
 
 export default function LocalNew() {
   const navigate = useNavigate();
-  
+  const { id } = useParams<{ id?: string }>();
+  const isEditMode = !!id;
+  const [isLoadingData, setIsLoadingData] = useState(false);
+
   // Identificacion
   const [marca, setMarca] = useState('NIU_SUSHI');
   const [number, setNumber] = useState<string>('1');
@@ -178,6 +181,113 @@ export default function LocalNew() {
     return () => { mounted = false };
   }, [marca]);
 
+  // Cargar datos si estamos en modo edición
+  const fetchLocalData = async (localId: number) => {
+    setIsLoadingData(true);
+    try {
+      const response = await api.get(`/locales/${localId}`);
+      const local = response.data;
+
+      // Pre-llenar TODOS los campos del formulario
+      setMarca(local.marca);
+      setSigla(local.sigla);
+      setNombreLocal(local.nombreLocal);
+      setRut(local.rut || '');
+      setRazonSocial(local.razonSocial || '');
+      setEncargadoLocal(local.encargadoLocal || '');
+      setEsFranquicia(local.esFranquicia || '');
+      setTieneUps(local.tieneUps || false);
+      setServicioAudio(local.servicioAudio || '');
+
+      // Ubicación
+      setDireccion(local.direccion || '');
+      setComuna(local.comuna || '');
+      setRegion(local.region || '');
+      setPais(local.pais || 'Chile');
+
+      // Telefonía básica
+      setTelefonoLocal(local.telefonoLocal || '');
+      setTelefono01(local.telefono01 || '');
+      setTelefono02(local.telefono02 || '');
+      setTelefono03(local.telefono03 || '');
+      setTelefonoRespaldo(local.telefonoRespaldo || '');
+
+      // Telefonía por proveedor - CLARO
+      setClaroNumero(local.claroNumero || '');
+      setClaroTarifa(local.claroTarifa || '');
+      setClaroAnexo1(local.claroAnexo1 || '');
+      setClaroAnexo2(local.claroAnexo2 || '');
+      setClaroAnexo3(local.claroAnexo3 || '');
+
+      // Telefonía por proveedor - GTD
+      setGtdNumero(local.gtdNumero || '');
+      setGtdTarifa(local.gtdTarifa || '');
+      setGtdAnexo1(local.gtdAnexo1 || '');
+      setGtdAnexo2(local.gtdAnexo2 || '');
+      setGtdAnexo3(local.gtdAnexo3 || '');
+
+      // Telefonía por proveedor - ENTEL
+      setEntelNumero(local.entelNumero || '');
+      setEntelTarifa(local.entelTarifa || '');
+      setEntelAnexo1(local.entelAnexo1 || '');
+      setEntelAnexo2(local.entelAnexo2 || '');
+      setEntelAnexo3(local.entelAnexo3 || '');
+
+      // Telefonía por proveedor - MOVISTAR
+      setMovistarNumero(local.movistarNumero || '');
+      setMovistarTarifa(local.movistarTarifa || '');
+      setMovistarAnexo1(local.movistarAnexo1 || '');
+      setMovistarAnexo2(local.movistarAnexo2 || '');
+      setMovistarAnexo3(local.movistarAnexo3 || '');
+
+      // Red
+      setDispositivoRed(local.dispositivoRed || 'UDM');
+      setEnlacePrincipal(local.enlacePrincipal || '');
+      setEnlaceSecundario(local.enlaceSecundario || '');
+      setEnlaceTercero(local.enlaceTercero || '');
+      setSwitchCantidad(local.switchCantidad || '1');
+      setSwitchPuertos(local.switchPuertos || '8');
+      setApCantidad(local.apCantidad || '');
+      setTeltonikaMarca(local.teltonikaMarca || '');
+      setTeltonikaModelo(local.teltonikaModelo || '');
+      setClaveWifiInterna(local.claveWifiInterna || '');
+
+      // Hardware - Servidor Principal
+      setServidorPrincipalModelo(local.servidorPrincipalModelo || '');
+      setServidorPrincipalDisco(local.servidorPrincipalDisco || '');
+      setServidorPrincipalRam(local.servidorPrincipalRam || '');
+      setServidorPrincipalProcesador(local.servidorPrincipalProcesador || '');
+      setServidorPrincipalProxmox(local.servidorPrincipalProxmox || false);
+
+      // Hardware - Servidor Respaldo
+      setServidorRespaldoModelo(local.servidorRespaldoModelo || '');
+      setServidorRespaldoDisco(local.servidorRespaldoDisco || '');
+      setServidorRespaldoRam(local.servidorRespaldoRam || '');
+      setServidorRespaldoProcesador(local.servidorRespaldoProcesador || '');
+      setServidorRespaldoProxmox(local.servidorRespaldoProxmox || false);
+
+      // CCTV - DVR
+      setDvrModelo(local.dvrModelo || '');
+      setDvrCapacidadDisco(local.dvrCapacidadDisco || '');
+      setDvrNumeroCamaras(local.dvrNumeroCamaras || '');
+      setDvrUsuarioAdmin(local.dvrUsuarioAdmin || '');
+      setDvrUsuarioOperaciones(local.dvrUsuarioOperaciones || '');
+      setDvrClaveAdmin(local.dvrClaveAdmin || '');
+      setDvrClaveOperaciones(local.dvrClaveOperaciones || '');
+    } catch (error: any) {
+      toast.error('Error cargando datos del local');
+      navigate('/');
+    } finally {
+      setIsLoadingData(false);
+    }
+  };
+
+  React.useEffect(() => {
+    if (isEditMode && id) {
+      fetchLocalData(parseInt(id));
+    }
+  }, [id, isEditMode]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     
@@ -283,14 +393,22 @@ export default function LocalNew() {
     try {
       console.log('=== ENVIANDO DATOS DESDE FRONTEND ===');
       console.log(JSON.stringify(payload, null, 2));
-      
-      const res = await api.post('/locales', payload);
-      toast.success('Local creado correctamente');
+
+      if (isEditMode && id) {
+        // Modo edición - usar PUT
+        const res = await api.put(`/locales/${id}`, payload);
+        toast.success('Local actualizado correctamente');
+      } else {
+        // Modo creación - usar POST
+        const res = await api.post('/locales', payload);
+        toast.success('Local creado correctamente');
+      }
       navigate('/');
     } catch (error: any) {
-      console.error('Error creando local', error);
+      console.error('Error procesando local', error);
       console.error('Respuesta del servidor:', error?.response?.data);
-      toast.error(error?.response?.data?.error || 'Error creando local');
+      const errorMsg = isEditMode ? 'Error actualizando local' : 'Error creando local';
+      toast.error(error?.response?.data?.error || errorMsg);
     }
   }
 
@@ -298,8 +416,17 @@ export default function LocalNew() {
     <div>
       <Header />
       <div className="max-w-6xl mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-6">➕ Crear Nuevo Local</h1>
+        <h1 className="text-3xl font-bold mb-6">
+          {isEditMode ? '✏️ Editar Local' : '➕ Crear Nuevo Local'}
+        </h1>
 
+        {isLoadingData && (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+        )}
+
+        {!isLoadingData && (
         <form onSubmit={handleSubmit} className="space-y-8">
           
           {/* SECCION: IDENTIFICACION */}
@@ -842,16 +969,17 @@ export default function LocalNew() {
 
           {/* BOTONES DE ACCION */}
           <div className="flex justify-end gap-4 pt-6">
-            <button type="button" onClick={() => navigate('/')} 
+            <button type="button" onClick={() => navigate('/')}
                     className="btn bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600">
               Cancelar
             </button>
-            <button type="submit" 
+            <button type="submit"
                     className="btn btn-primary px-8 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
-              Crear Local Completo
+              {isEditMode ? '💾 Guardar Cambios' : '✅ Crear Local Completo'}
             </button>
           </div>
         </form>
+        )}
 
         {/* Informacion de timestamps automaticos */}
         <div className="mt-4 p-4 bg-blue-50 rounded-lg">
