@@ -61,7 +61,7 @@ export default function LocalRowExpanded({ local, onEdit, onDelete }: LocalRowEx
       </div>
 
       {/* Información principal en grid */}
-      <div className="grid md:grid-cols-3 gap-6 mb-6">
+      <div className="grid md:grid-cols-2 gap-6 mb-6">
         {/* Columna 1 - Ubicación */}
         <div className="space-y-4">
           <div>
@@ -82,7 +82,7 @@ export default function LocalRowExpanded({ local, onEdit, onDelete }: LocalRowEx
           </div>
         </div>
 
-        {/* Columna 2 - Información Legal */}
+        {/* Columna 2 - Información Empresarial */}
         <div className="space-y-4">
           <div>
             <p className="text-xs font-semibold text-gray-500 uppercase">Empresa</p>
@@ -92,7 +92,7 @@ export default function LocalRowExpanded({ local, onEdit, onDelete }: LocalRowEx
 
           <div>
             <p className="text-xs font-semibold text-gray-500 uppercase">Encargado</p>
-            <p className="text-sm text-gray-700 font-medium">{local.encargadoLocal || 'Sin asignar'}</p>
+            <p className="text-sm text-gray-700 font-medium break-all">{local.encargadoLocal || local.asignado || 'Sin asignar'}</p>
             {local.esFranquicia && (
               <p className="text-xs text-gray-500 mt-1">
                 {local.esFranquicia === 'FRANQUICIA' ? '🔗 Franquicia' : '🏢 Propio'}
@@ -100,28 +100,25 @@ export default function LocalRowExpanded({ local, onEdit, onDelete }: LocalRowEx
             )}
           </div>
         </div>
+      </div>
 
-        {/* Columna 3 - Asignación e Infraestructura */}
-        <div className="space-y-4">
+      {/* Sección de Infraestructura */}
+      <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+        <h4 className="text-sm font-semibold text-gray-700 mb-3">⚙️ Infraestructura</h4>
+        <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase">Asignado a</p>
-            <p className="text-sm text-gray-700 font-medium break-all">{local.asignado || 'No asignado'}</p>
+            <p className="text-sm text-gray-700">
+              <span className="font-medium">UPS:</span>{' '}
+              <span>{local.tieneUps ? '✅ Sí' : '❌ No'}</span>
+            </p>
           </div>
-
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase">Infraestructura</p>
-            <div className="space-y-1">
+          {local.dispositivoRed && (
+            <div>
               <p className="text-sm text-gray-700">
-                <span className="font-medium">UPS:</span>{' '}
-                <span>{local.tieneUps ? '✅ Sí' : '❌ No'}</span>
+                <span className="font-medium">Dispositivo de Red:</span> {local.dispositivoRed}
               </p>
-              {local.dispositivoRed && (
-                <p className="text-sm text-gray-700">
-                  <span className="font-medium">Dispositivo:</span> {local.dispositivoRed}
-                </p>
-              )}
             </div>
-          </div>
+          )}
         </div>
       </div>
 
