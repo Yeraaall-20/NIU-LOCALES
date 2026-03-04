@@ -171,7 +171,7 @@ export default function LocalList() {
                         <div>{local.direccion}</div>
                         <div className="text-sm text-gray-500">{local.comuna}</div>
                       </td>
-                      <td className="py-4 px-6 text-gray-600">Sin asignar</td>
+                      <td className="py-4 px-6 text-gray-600">{local.asignado || 'Sin asignar'}</td>
                       <td className="py-4 px-6">
                         <a
                           href={`http://192.168.1.${local.id}`}

@@ -153,7 +153,10 @@ export default function LocalNew() {
   }, [marca, number]);
 
   // Auto-compute next number for selected brand based on existing locales
+  // Solo en modo creación (no en edición)
   React.useEffect(() => {
+    if (isEditMode) return; // No calcular si estamos editando
+
     let mounted = true;
     async function computeNext() {
       try {
@@ -179,7 +182,7 @@ export default function LocalNew() {
 
     computeNext();
     return () => { mounted = false };
-  }, [marca]);
+  }, [marca, isEditMode]);
 
   // Cargar datos si estamos en modo edición
   const fetchLocalData = async (localId: number) => {
@@ -190,8 +193,13 @@ export default function LocalNew() {
 
       // Pre-llenar TODOS los campos del formulario
       setMarca(local.marca);
+
+      // Extraer el número de la sigla para evitar que sea sobrescrito
+      // Ej: "NICL02" -> "02"
+      const siglaPrefix = brandPrefix[local.marca] || 'LOC';
+      const extractedNumber = local.sigla.replace(siglaPrefix, '');
+      setNumber(extractedNumber);
       setSigla(local.sigla);
-      setNombreLocal(local.nombreLocal);
       setRut(local.rut || '');
       setRazonSocial(local.razonSocial || '');
       setEncargadoLocal(local.encargadoLocal || '');
