@@ -30,7 +30,6 @@ export default function LocalList() {
     { value: 'NIU_EXPRESS', label: 'NIU EXPRESS', color: 'bg-black' },
     { value: 'NIU_SUSHI', label: 'NU SUSHI', color: 'bg-red-600' },
     { value: 'GUACAMOLE', label: 'GUACAMOLE', color: 'bg-green-500' },
-    { value: 'KAO', label: 'KAO', color: 'bg-purple-600' },
     { value: 'NIU_MEXICO', label: 'MEXICO', color: 'bg-yellow-500' }
   ];
 

@@ -8,7 +8,6 @@ const brandPrefix: Record<string, string> = {
   NIU_SUSHI: 'NICL',
   NIU_EXPRESS: 'NECL',
   GUACAMOLE: 'GUCL',
-  KAO: 'KCL',
   NIU_MEXICO: 'NIMX'
 };
 
@@ -22,7 +21,6 @@ const empresasData = [
   { rut: '76.363.629-1', razonSocial: 'COMERCIAL OR LTDA' },
   { rut: '76.425.158-k', razonSocial: 'COMERCIAL TOV LTDA' },
   { rut: '76.432.258-4', razonSocial: 'COMERCIAL MAZAL LTDA' },
-  { rut: '76.486.005-5', razonSocial: 'KAO THAI SPA' },
   { rut: '76.777.491-5', razonSocial: 'COMERCIAL SAMEAJ LTDA' },
   { rut: '76.920.910-7', razonSocial: 'OJI LTDA' },
   { rut: '77.147.186-2', razonSocial: 'GUACAMOLE SPA' },
@@ -315,7 +313,6 @@ export default function LocalNew() {
                   <option value="NIU_SUSHI">NIU SUSHI</option>
                   <option value="NIU_EXPRESS">NIU EXPRESS</option>
                   <option value="GUACAMOLE">GUACAMOLE</option>
-                  <option value="KAO">KAO</option>
                   <option value="NIU_MEXICO">NIU MEXICO</option>
                 </select>
               </div>
