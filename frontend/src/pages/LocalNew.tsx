@@ -194,10 +194,9 @@ export default function LocalNew() {
       // Pre-llenar TODOS los campos del formulario
       setMarca(local.marca);
 
-      // Extraer el número de la sigla para evitar que sea sobrescrito
-      // Ej: "NICL02" -> "02"
-      const siglaPrefix = brandPrefix[local.marca] || 'LOC';
-      const extractedNumber = local.sigla.replace(siglaPrefix, '');
+      // Extraer el número de la sigla extrayendo SOLO los dígitos
+      // Ej: "NICL02" -> "02", "GUCL001" -> "001"
+      const extractedNumber = local.sigla.replace(/\D/g, '') || '1';
       setNumber(extractedNumber);
       setSigla(local.sigla);
       setRut(local.rut || '');
