@@ -90,20 +90,13 @@ export default function LocalNew() {
   const [gtdAnexo2, setGtdAnexo2] = useState('');
   const [gtdAnexo3, setGtdAnexo3] = useState('');
   
-  // Telefonia por Proveedor - ENTEL
-  const [entelNumero, setEntelNumero] = useState('');
-  const [entelTarifa, setEntelTarifa] = useState('');
-  const [entelAnexo1, setEntelAnexo1] = useState('');
-  const [entelAnexo2, setEntelAnexo2] = useState('');
-  const [entelAnexo3, setEntelAnexo3] = useState('');
-  
-  // Telefonia por Proveedor - MOVISTAR
-  const [movistarNumero, setMovistarNumero] = useState('');
-  const [movistarTarifa, setMovistarTarifa] = useState('');
-  const [movistarAnexo1, setMovistarAnexo1] = useState('');
-  const [movistarAnexo2, setMovistarAnexo2] = useState('');
-  const [movistarAnexo3, setMovistarAnexo3] = useState('');
-  
+  // Telefonia por Proveedor - CISCO
+  const [ciscoNumero, setCiscoNumero] = useState('');
+  const [ciscoTarifa, setCiscoTarifa] = useState('');
+  const [ciscoAnexo1, setCiscoAnexo1] = useState('');
+  const [ciscoAnexo2, setCiscoAnexo2] = useState('');
+  const [ciscoAnexo3, setCiscoAnexo3] = useState('');
+
   // Red - Dispositivos de red y enlaces
   const [dispositivoRed, setDispositivoRed] = useState('UDM');
   const [enlacePrincipal, setEnlacePrincipal] = useState('');
@@ -235,19 +228,12 @@ export default function LocalNew() {
       setGtdAnexo2(local.gtdAnexo2 || '');
       setGtdAnexo3(local.gtdAnexo3 || '');
 
-      // Telefonía por proveedor - ENTEL
-      setEntelNumero(local.entelNumero || '');
-      setEntelTarifa(local.entelTarifa || '');
-      setEntelAnexo1(local.entelAnexo1 || '');
-      setEntelAnexo2(local.entelAnexo2 || '');
-      setEntelAnexo3(local.entelAnexo3 || '');
-
-      // Telefonía por proveedor - MOVISTAR
-      setMovistarNumero(local.movistarNumero || '');
-      setMovistarTarifa(local.movistarTarifa || '');
-      setMovistarAnexo1(local.movistarAnexo1 || '');
-      setMovistarAnexo2(local.movistarAnexo2 || '');
-      setMovistarAnexo3(local.movistarAnexo3 || '');
+      // Telefonía por proveedor - CISCO
+      setCiscoNumero(local.ciscoNumero || '');
+      setCiscoTarifa(local.ciscoTarifa || '');
+      setCiscoAnexo1(local.ciscoAnexo1 || '');
+      setCiscoAnexo2(local.ciscoAnexo2 || '');
+      setCiscoAnexo3(local.ciscoAnexo3 || '');
 
       // Red
       setDispositivoRed(local.dispositivoRed || 'UDM');
@@ -355,17 +341,12 @@ export default function LocalNew() {
       gtdAnexo1,
       gtdAnexo2,
       gtdAnexo3,
-      entelNumero,
-      entelTarifa,
-      entelAnexo1,
-      entelAnexo2,
-      entelAnexo3,
-      movistarNumero,
-      movistarTarifa,
-      movistarAnexo1,
-      movistarAnexo2,
-      movistarAnexo3,
-      
+      ciscoNumero,
+      ciscoTarifa,
+      ciscoAnexo1,
+      ciscoAnexo2,
+      ciscoAnexo3,
+
       // Red
       dispositivoRed,
       enlacePrincipal,
@@ -668,61 +649,31 @@ export default function LocalNew() {
               </div>
             </div>
 
-            {/* ENTEL */}
-            <div className="mb-6 p-4 bg-green-50 rounded-lg">
-              <h3 className="font-semibold text-green-800 mb-3">ENTEL</h3>
+            {/* CISCO */}
+            <div className="mb-4 p-4 bg-purple-50 rounded-lg">
+              <h3 className="font-semibold text-purple-800 mb-3">CISCO</h3>
               <div className="grid md:grid-cols-5 gap-4">
                 <div>
-                  <label className="label">Número ENTEL</label>
-                  <input className="input" value={entelNumero} onChange={(e) => setEntelNumero(e.target.value)} />
+                  <label className="label">Número CISCO</label>
+                  <input className="input" value={ciscoNumero} onChange={(e) => setCiscoNumero(e.target.value)} />
                 </div>
                 <div>
                   <label className="label">Tarifa</label>
-                  <input className="input" value={entelTarifa} onChange={(e) => setEntelTarifa(e.target.value)} />
+                  <input className="input" value={ciscoTarifa} onChange={(e) => setCiscoTarifa(e.target.value)} />
                 </div>
                 <div>
                   <label className="label">Anexo 1</label>
-                  <input className="input" value={entelAnexo1} onChange={(e) => setEntelAnexo1(e.target.value)} 
+                  <input className="input" value={ciscoAnexo1} onChange={(e) => setCiscoAnexo1(e.target.value)}
                          placeholder="1234" maxLength={4} />
                 </div>
                 <div>
                   <label className="label">Anexo 2</label>
-                  <input className="input" value={entelAnexo2} onChange={(e) => setEntelAnexo2(e.target.value)} 
+                  <input className="input" value={ciscoAnexo2} onChange={(e) => setCiscoAnexo2(e.target.value)}
                          placeholder="1235" maxLength={4} />
                 </div>
                 <div>
                   <label className="label">Anexo 3</label>
-                  <input className="input" value={entelAnexo3} onChange={(e) => setEntelAnexo3(e.target.value)} 
-                         placeholder="1236" maxLength={4} />
-                </div>
-              </div>
-            </div>
-
-            {/* MOVISTAR */}
-            <div className="mb-4 p-4 bg-yellow-50 rounded-lg">
-              <h3 className="font-semibold text-yellow-800 mb-3">MOVISTAR</h3>
-              <div className="grid md:grid-cols-5 gap-4">
-                <div>
-                  <label className="label">Número MOVISTAR</label>
-                  <input className="input" value={movistarNumero} onChange={(e) => setMovistarNumero(e.target.value)} />
-                </div>
-                <div>
-                  <label className="label">Tarifa</label>
-                  <input className="input" value={movistarTarifa} onChange={(e) => setMovistarTarifa(e.target.value)} />
-                </div>
-                <div>
-                  <label className="label">Anexo 1</label>
-                  <input className="input" value={movistarAnexo1} onChange={(e) => setMovistarAnexo1(e.target.value)} 
-                         placeholder="1234" maxLength={4} />
-                </div>
-                <div>
-                  <label className="label">Anexo 2</label>
-                  <input className="input" value={movistarAnexo2} onChange={(e) => setMovistarAnexo2(e.target.value)} 
-                         placeholder="1235" maxLength={4} />
-                </div>
-                <div>
-                  <label className="label">Anexo 3</label>
-                  <input className="input" value={movistarAnexo3} onChange={(e) => setMovistarAnexo3(e.target.value)} 
+                  <input className="input" value={ciscoAnexo3} onChange={(e) => setCiscoAnexo3(e.target.value)}
                          placeholder="1236" maxLength={4} />
                 </div>
               </div>
