@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { api } from '../api';
 import { useAuth } from '../contexts/AuthContext';
 import Header from '../components/header';
+import LocalRowExpanded from '../components/LocalRowExpanded';
 import { toast } from 'react-toastify';
 
 interface Local {
@@ -11,8 +12,13 @@ interface Local {
   nombreLocal: string;
   direccion: string;
   comuna: string;
+  region?: string;
   marca: string;
   telefonoLocal: string;
+  rut?: string;
+  razonSocial?: string;
+  encargadoLocal?: string;
+  esFranquicia?: string;
   asignado?: string;
   createdBy?: number;
 }
@@ -23,6 +29,7 @@ export default function LocalList() {
   const [selectedMarca, setSelectedMarca] = useState<string>('');
   const [showMyLocalesOnly, setShowMyLocalesOnly] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [expandedLocalId, setExpandedLocalId] = useState<number | null>(null);
   const { isAdmin, user } = useAuth();
 
   const marcas = [
@@ -54,20 +61,31 @@ export default function LocalList() {
 
   const filterLocales = () => {
     let filtered = locales;
-    
+
     // Filtrar por marca si está seleccionada
     if (selectedMarca) {
       filtered = filtered.filter(local => local.marca === selectedMarca);
     }
-    
+
     // Filtrar por "Mis Locales" si está activado
     if (showMyLocalesOnly && user) {
-      filtered = filtered.filter(local => 
+      filtered = filtered.filter(local =>
         local.asignado === user.email || local.createdBy === user.id
       );
     }
-    
+
     setFilteredLocales(filtered);
+  };
+
+  const handleDeleteLocal = async (id: number) => {
+    try {
+      await api.delete(`/locales/${id}`);
+      toast.success('Local eliminado correctamente');
+      setExpandedLocalId(null);
+      loadLocales();
+    } catch (error: any) {
+      toast.error(error?.response?.data?.error || 'Error eliminando local');
+    }
   };
 
   const getMarcaStyle = (marca: string) => {
@@ -131,41 +149,63 @@ export default function LocalList() {
             <tbody>
               {filteredLocales.length > 0 ? (
                 filteredLocales.map((local, index) => (
-                  <tr key={local.id} className={`border-b border-gray-100 hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-25'}`}>
-                    <td className="py-4 px-6">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-4 h-4 rounded-full ${getMarcaStyle(local.marca)}`}></div>
-                        <span className="font-medium text-gray-800">{local.sigla}</span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-6 text-gray-700">{local.nombreLocal}</td>
-                    <td className="py-4 px-6 text-gray-600">
-                      <div>{local.direccion}</div>
-                      <div className="text-sm text-gray-500">{local.comuna}</div>
-                    </td>
-                    <td className="py-4 px-6 text-gray-600">Sin asignar</td>
-                    <td className="py-4 px-6">
-                      <a 
-                        href={`http://192.168.1.${local.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-blue-100 text-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-200 transition-colors inline-block font-medium"
-                      >
-                        192.168.1.{local.id}
-                      </a>
-                    </td>
-                    <td className="py-4 px-6 text-gray-600">{local.telefonoLocal}</td>
-                    <td className="py-4 px-6">
-                      <div className="flex gap-2 justify-center">
-                        <Link to={`/local/${local.id}`} className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
-                           Editar
-                        </Link>
-                        <Link to={`/visitas`} className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition-colors text-sm">
-                           Visita
-                        </Link>
-                      </div>
-                    </td>
-                  </tr>
+                  <React.Fragment key={local.id}>
+                    <tr className={`border-b border-gray-100 hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-25'}`}>
+                      <td className="py-4 px-6">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-4 h-4 rounded-full ${getMarcaStyle(local.marca)}`}></div>
+                          <span className="font-medium text-gray-800">{local.sigla}</span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6">
+                        <button
+                          onClick={() =>
+                            setExpandedLocalId(expandedLocalId === local.id ? null : local.id)
+                          }
+                          className="text-blue-600 hover:underline hover:text-blue-800 font-medium transition-colors"
+                        >
+                          {local.nombreLocal}
+                        </button>
+                      </td>
+                      <td className="py-4 px-6 text-gray-600">
+                        <div>{local.direccion}</div>
+                        <div className="text-sm text-gray-500">{local.comuna}</div>
+                      </td>
+                      <td className="py-4 px-6 text-gray-600">Sin asignar</td>
+                      <td className="py-4 px-6">
+                        <a
+                          href={`http://192.168.1.${local.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-blue-100 text-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-200 transition-colors inline-block font-medium"
+                        >
+                          192.168.1.{local.id}
+                        </a>
+                      </td>
+                      <td className="py-4 px-6 text-gray-600">{local.telefonoLocal}</td>
+                      <td className="py-4 px-6">
+                        <div className="flex gap-2 justify-center">
+                          <Link to={`/local/${local.id}`} className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm">
+                             Editar
+                          </Link>
+                          <Link to={`/visitas`} className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition-colors text-sm">
+                             Visita
+                          </Link>
+                        </div>
+                      </td>
+                    </tr>
+                    {expandedLocalId === local.id && (
+                      <tr>
+                        <td colSpan={7} className="p-0 border-b-2 border-gray-200">
+                          <LocalRowExpanded
+                            local={local}
+                            onEdit={(id) => {}}
+                            onDelete={handleDeleteLocal}
+                          />
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 ))
               ) : (
                 <tr>
